@@ -30,6 +30,8 @@
         <jjwt>0.9.1</jjwt>
         <jaxb-api>2.3.1</jaxb-api>
         <poi>3.16</poi>
+        <httpclient>0.4.8</httpclient>
+        <swagger>3.0.2</swagger>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -120,13 +122,13 @@
             <dependency>
                 <groupId>com.github.wechatpay-apiv3</groupId>
                 <artifactId>wechatpay-apache-httpclient</artifactId>
-                <version>0.4.8</version>
+                <version>${httpclient}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
-                <version>3.0.2</version>
+                <version>${swagger}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

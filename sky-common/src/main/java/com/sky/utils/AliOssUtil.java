@@ -20,7 +20,7 @@ public class AliOssUtil {
     private String bucketName;
 
     /**
-     * 文件上传
+     * 文件上传 TODO 待了解文件上传api
      *
      * @param bytes
      * @param objectName

@@ -28,6 +28,7 @@ public class HttpClientUtil {
     static final  int TIMEOUT_MSEC = 5 * 1000;
 
     /**
+     * TODO 待了解 HttpClient
      * 发送GET方式请求
      * @param url
      * @param paramMap

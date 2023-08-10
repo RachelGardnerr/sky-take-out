@@ -102,4 +102,35 @@ public class EmployeeController {
         return Result.success(pageResult);
     }
 
+    /**
+     * 启用 停用员工状态
+     * TODO 待解决普通用户可以修改其他用户状态问题
+     *
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用停用员工账号")
+    public Result startOrStop(@PathVariable Integer status, Long id) {
+        employeeService.startOrStop(status, id);
+        return Result.success();
+    }
+
+    /**
+     * 根据用户信息查询用户id
+     */
+    @GetMapping("/{id}")
+    @ApiOperation("根据用户id查询用户信息")
+    public Result<Employee> queryEmployee(@PathVariable Long id) {
+        Employee employee = employeeService.queryEmployee(id);
+        return Result.success(employee);
+    }
+
+    @PutMapping
+    @ApiOperation("编辑员工信息")
+    public Result<Employee> modifyEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        employeeService.modifyEmployee(employeeDTO);
+        return Result.success();
+    }
 }

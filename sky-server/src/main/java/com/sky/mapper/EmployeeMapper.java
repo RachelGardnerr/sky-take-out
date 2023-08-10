@@ -34,4 +34,18 @@ public interface EmployeeMapper {
      * @return
      */
     Page<Employee> getPage(EmployeePageQueryDTO pageQueryDTO);
+
+    /**
+     * 启用停用员工状态
+     * @param employee
+     */
+    void update(Employee employee);
+
+    /**
+     * 启用停用员工状态，查询是否为管理用户
+     * @param userId
+     * @return
+     */
+    @Select("SELECT * FROM employee WHERE id = #{id}")
+    Employee selectById(Long userId);
 }

@@ -49,7 +49,7 @@ public interface CategoryService {
 
     /**
      * 根据类型查询分类
-     * @param id
+     * @param type
      * @return
      */
     List<Category> list(Integer type);

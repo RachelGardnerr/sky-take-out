@@ -4,10 +4,10 @@
 <mapper namespace="com.sky.mapper.SetmealDishMapper">
 
 
-    <select id="selectByIds" resultType="java.lang.Long">
-        select setmeal_id from setmeal_dish where id in
-        <foreach collection="list" separator="," open="(" close=")" item="dish">
-            (#{dish.id})
+    <select id="selectByIds" resultType="com.sky.entity.SetmealDish">
+        select setmeal_id from setmeal_dish where dish_id in
+        <foreach collection="list" separator="," open="(" close=")" item="dishId">
+            (#{dishId})
         </foreach>
     </select>
 </mapper>

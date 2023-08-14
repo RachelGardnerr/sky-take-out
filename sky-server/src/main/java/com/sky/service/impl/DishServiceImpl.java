@@ -41,6 +41,7 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private SetmealDishMapper setmealMapper;
 
+
     /**
      * 新增菜品和口味
      *
@@ -111,5 +112,21 @@ public class DishServiceImpl implements DishService {
                 .status(status)
                 .build();
         dishMapper.modify(dish);
+    }
+
+    /**
+     * 根据id查询菜品和口味
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public DishVO queryDishWithFlavorsById(Long id) {
+        Dish dish = dishMapper.selectById(id);
+        List<DishFlavor> dishFlavors = dishFlavorMapper.selectByDishId(id);
+        DishVO dishVO = new DishVO();
+        BeanUtils.copyProperties(dish, dishVO);
+        dishVO.setFlavors(dishFlavors);
+        return dishVO;
     }
 }

@@ -11,10 +11,11 @@
                 #{updateUser})
     </insert>
 
-    <update id="modify">
+    <update id="update">
         update dish
         <set>
             <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
             <if test="price != null">price = #{price},</if>
             <if test="image != null">image =#{image},</if>
             <if test="description != null">description = #{description},</if>

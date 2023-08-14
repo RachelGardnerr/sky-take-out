@@ -52,4 +52,10 @@ public interface DishService {
      * @return
      */
     DishVO queryDishWithFlavorsById(Long id);
+
+    /**
+     * 修改菜品
+     * @param dishDTO
+     */
+    void modify(DishDTO dishDTO);
 }

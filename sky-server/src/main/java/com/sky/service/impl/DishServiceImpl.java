@@ -1,11 +1,21 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
+import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.entity.SetmealDish;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.SetmealDishMapper;
+import com.sky.result.PageResult;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +38,9 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
 
+    @Autowired
+    private SetmealDishMapper setmealMapper;
+
     /**
      * 新增菜品和口味
      *
@@ -47,5 +60,47 @@ public class DishServiceImpl implements DishService {
             });
         }
         dishFlavorMapper.insertBatch(flavors);
+    }
+
+    /**
+     * 菜品分页查询
+     *
+     * @param pageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult pageQuery(DishPageQueryDTO pageQueryDTO) {
+        PageHelper.startPage(pageQueryDTO.getPage(), pageQueryDTO.getPageSize());
+        Page<DishVO> page = dishMapper.selectPage(pageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 菜品批量删除
+     *
+     * @param ids
+     */
+    @Override
+    public void removeBatch(List<Long> ids) {
+        // 查询菜品是否为起售状态
+        ids.forEach(dishId -> {
+            Dish dish = dishMapper.selectById(dishId);
+            if (dish.getStatus() == StatusConstant.ENABLE) {
+                throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+            }
+        });
+
+        // 判断菜品是否关联套餐
+        List<SetmealDish> setmealDishes = setmealMapper.selectByIds(ids);
+        if (setmealDishes.size() > 0 || setmealDishes != null) {
+            throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
+        }
+
+        ids.forEach(dishId -> {
+            // 删除菜品
+            dishMapper.deleteById(dishId);
+            // 删除口味
+            dishFlavorMapper.deleteByDishId(dishId);
+        });
     }
 }

@@ -1,16 +1,17 @@
 package com.sky.controller.admin;
 
 import com.sky.dto.DishDTO;
+import com.sky.dto.DishPageQueryDTO;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @PROJECT_NAME: sky-take-out
@@ -40,6 +41,31 @@ public class DishController {
     public Result save(@RequestBody DishDTO dto) {
         log.info("新增菜品：{}" + dto);
         dishService.saveWithFlavor(dto);
+        return Result.success();
+    }
+
+    /**
+     * 菜品分页查询
+     *
+     * @param pageQueryDTO
+     * @return
+     */
+    @GetMapping("/page")
+    @ApiOperation("菜品分页查询")
+    public Result<PageResult> pageQuery(DishPageQueryDTO pageQueryDTO) {
+        PageResult pageResult = dishService.pageQuery(pageQueryDTO);
+        return Result.success(pageResult);
+    }
+
+    /**
+     * 菜品批量删除
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    @ApiOperation("菜品批量删除")
+    public Result removeBatch(@RequestParam List<Long> ids){
+        dishService.removeBatch(ids);
         return Result.success();
     }
 

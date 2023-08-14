@@ -6,3 +6,9 @@
     database: sky_take_out
     username: root
     password: root
+
+  alioss:
+    endpoint: oss-cn-qingdao.aliyuncs.com
+    access-key-id: LTAI5t97zHusEH167FKGAnai
+    access-key-secret: AkHcmChUjJ2uTndAiprCO58BPEp8Vg
+    bucket-name: djl-bucket

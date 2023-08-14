@@ -7,6 +7,7 @@ import com.aliyun.oss.OSSException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.ByteArrayInputStream;
 
 @Data
@@ -20,7 +21,7 @@ public class AliOssUtil {
     private String bucketName;
 
     /**
-     * 文件上传 TODO 待了解文件上传api
+     * 文件上传
      *
      * @param bytes
      * @param objectName

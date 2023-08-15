@@ -28,7 +28,7 @@
 
 
     <select id="selectPage" resultType="com.sky.vo.DishVO">
-        select *
+        select d.*,c.name categoryName
         from dish d
         left join category c on c.id = d.category_id
         <where>
@@ -42,5 +42,19 @@
                 and d.status = #{status}
             </if>
         </where>
+        order by d.create_time desc
+    </select>
+
+    <select id="select" resultType="com.sky.entity.Dish">
+        select * from dish
+        <where>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="name != null">
+                and name like concat('%', #{name},'%')
+            </if>
+        </where>
+        order by create_time desc
     </select>
 </mapper>

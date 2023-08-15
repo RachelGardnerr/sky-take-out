@@ -67,10 +67,9 @@ public interface DishMapper {
     void update(Dish dish);
 
     /**
-     * 根据id分类id查询菜品
+     * 根据分类id或名称查询菜品
+     *
      * @return
      */
-    @Select("select  * from dish where category_id = #{categoryId}")
-    List<Dish> selectByCategoryId(Long categoryId);
-
+    List<Dish> select(Dish dish);
 }

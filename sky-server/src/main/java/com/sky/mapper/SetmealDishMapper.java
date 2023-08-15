@@ -11,6 +11,7 @@ public interface SetmealDishMapper {
 
     /**
      * 根据分类id查询套餐的数量
+     *
      * @param id
      * @return
      */
@@ -20,9 +21,16 @@ public interface SetmealDishMapper {
 
     /**
      * 根据id批量查询
+     *
      * @param ids
      * @return
      */
     List<SetmealDish> selectByIds(List<Long> ids);
 
+    /**
+     * 批量添加
+     *
+     * @param setmealDishes
+     */
+    void insertBatch(List<SetmealDish> setmealDishes);
 }

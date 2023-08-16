@@ -27,7 +27,8 @@ public interface SetmealDishMapper {
      * @param ids
      * @return
      */
-    List<SetmealDish> selectByIds(List<Long> ids);
+    List<SetmealDish> selectByDishIds(List<Long> ids);
+
 
     /**
      * 批量添加
@@ -51,4 +52,13 @@ public interface SetmealDishMapper {
      * @return
      */
     List<Dish> selectBySetmealId(Long id);
+
+    /**
+     * 根据id查询套餐菜品关系
+     *
+     * @param id
+     * @return
+     */
+    @Select("select * from setmeal_dish where setmeal_id = #{id}")
+    List<SetmealDish> selectById(Long id);
 }

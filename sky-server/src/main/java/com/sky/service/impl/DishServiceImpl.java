@@ -92,7 +92,7 @@ public class DishServiceImpl implements DishService {
         });
 
         // 判断菜品是否关联套餐
-        List<SetmealDish> setmealDishes = setmealMapper.selectByIds(ids);
+        List<SetmealDish> setmealDishes = setmealMapper.selectByDishIds(ids);
         if (setmealDishes.size() > 0 && setmealDishes != null) {
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }

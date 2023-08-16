@@ -11,7 +11,7 @@
     </insert>
 
 
-    <select id="selectByIds" resultType="com.sky.entity.SetmealDish">
+    <select id="selectByDishIds" resultType="com.sky.entity.SetmealDish">
         select setmeal_id from setmeal_dish where dish_id in
         <foreach collection="list" separator="," open="(" close=")" item="dishId">
             (#{dishId})

@@ -17,4 +17,11 @@
             (#{dishId})
         </foreach>
     </select>
+
+    <select id="selectBySetmealId" resultType="com.sky.entity.Dish">
+        select d.*
+        from setmeal_dish s
+                 right join dish d on d.id = s.dish_id
+        where s.setmeal_id = #{id}
+    </select>
 </mapper>

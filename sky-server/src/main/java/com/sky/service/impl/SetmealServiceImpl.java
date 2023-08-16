@@ -2,10 +2,13 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
+import com.sky.exception.SetmealEnableFailedException;
 import com.sky.mapper.SetmealDishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
@@ -54,7 +57,7 @@ public class SetmealServiceImpl implements SetmealService {
      */
     @Override
     @Transactional
-    public void save(SetmealDTO setmealDTO) {
+    public void saveWithDish(SetmealDTO setmealDTO) {
         Setmeal setmeal = new Setmeal();
         BeanUtils.copyProperties(setmealDTO, setmeal);
         // 新增套餐
@@ -68,5 +71,28 @@ public class SetmealServiceImpl implements SetmealService {
         }
         //新增套餐与菜品关系数据
         setmealDishMapper.insertBatch(setmealDishes);
+    }
+
+    /**
+     * 删除套餐
+     *
+     * @param ids
+     */
+    @Override
+    @Transactional
+    public void removeBatch(List<Long> ids) {
+
+        ids.forEach(id -> {
+            Setmeal setmeal = setmealMapper.selectById(id);
+            if (StatusConstant.ENABLE == setmeal.getStatus()) {
+                throw new SetmealEnableFailedException(MessageConstant.SETMEAL_ON_SALE);
+            }
+        });
+
+        ids.forEach(setmealId -> {
+            setmealMapper.deleteById(setmealId);
+            setmealDishMapper.deleteById(setmealId);
+        });
+
     }
 }

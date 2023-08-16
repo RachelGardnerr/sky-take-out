@@ -4,6 +4,8 @@ import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.result.PageResult;
 
+import java.util.List;
+
 /**
  * @PROJECT_NAME: sky-take-out
  * @DESCRIPTION:
@@ -26,5 +28,12 @@ public interface SetmealService {
      *
      * @param setmealDTO
      */
-    void save(SetmealDTO setmealDTO);
+    void saveWithDish(SetmealDTO setmealDTO);
+
+    /**
+     * 删除套餐
+     *
+     * @param ids
+     */
+    void removeBatch(List<Long> ids);
 }

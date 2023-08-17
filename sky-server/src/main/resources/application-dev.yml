@@ -12,3 +12,10 @@
     access-key-id: LTAI5t97zHusEH167FKGAnai
     access-key-secret: AkHcmChUjJ2uTndAiprCO58BPEp8Vg
     bucket-name: djl-bucket
+
+spring:
+  redis:
+    host: 192.168.61.128
+    port: 6379
+    password: root1234
+    database: 10

@@ -15,6 +15,7 @@ import com.sky.result.PageResult;
 import com.sky.service.CategoryService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private SetmealDishMapper setmealMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     /**

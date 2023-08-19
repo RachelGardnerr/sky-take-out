@@ -13,6 +13,10 @@
     access-key-secret: AkHcmChUjJ2uTndAiprCO58BPEp8Vg
     bucket-name: djl-bucket
 
+  wechat:
+    appid: wxea117d33910d91a3
+    secret: b875ec042232135f17c62ca22aed8bdf
+
 spring:
   redis:
     host: 192.168.61.128

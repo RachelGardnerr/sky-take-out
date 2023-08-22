@@ -1,7 +1,9 @@
 package com.sky.controller.user;
 
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
@@ -39,6 +41,7 @@ public class OrdesController {
         OrderSubmitVO orderSubmitVO = orderService.submit(orderSubmitDTO);
         return Result.success(orderSubmitVO);
     }
+
     /**
      * 订单支付
      *
@@ -54,6 +57,19 @@ public class OrdesController {
         // 无法实现支付直接调用成功方法
         orderService.paySuccess(ordersPaymentDTO.getOrderNumber());
         return Result.success(orderPaymentVO);
+    }
+
+    /**
+     * 历史订单
+     *
+     * @param ordersPageQueryDTO
+     * @return
+     */
+    @GetMapping("/historyOrders")
+    @ApiOperation("历史订单")
+    public Result<PageResult> list(OrdersPageQueryDTO ordersPageQueryDTO) {
+        PageResult pageResult = orderService.list(ordersPageQueryDTO);
+        return Result.success(pageResult);
     }
 
 }

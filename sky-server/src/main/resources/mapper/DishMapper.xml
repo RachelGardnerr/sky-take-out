@@ -48,6 +48,9 @@
     <select id="select" resultType="com.sky.entity.Dish">
         select * from dish
         <where>
+            <if test="status != null">
+                status = #{status}
+            </if>
             <if test="categoryId != null">
                 and category_id = #{categoryId}
             </if>

@@ -43,7 +43,6 @@ public class DishServiceImpl implements DishService {
     private SetmealDishMapper setmealMapper;
 
 
-
     /**
      * 新增菜品和口味
      *
@@ -188,8 +187,7 @@ public class DishServiceImpl implements DishService {
      * @return
      */
     public List<DishVO> listWithFlavor(Dish dish) {
-
-
+        dish.setStatus(StatusConstant.ENABLE);
         List<Dish> dishList = dishMapper.select(dish);
 
         List<DishVO> dishVOList = new ArrayList<>();

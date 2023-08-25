@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController("userDishController")
 @RequestMapping("/user/dish")
@@ -52,7 +53,7 @@ public class DishController {
 
         List<DishVO> list = dishService.listWithFlavor(dish);
         // 没有缓存，添加缓存
-        redisTemplate.opsForValue().set(key, list);
+        redisTemplate.opsForValue().set(key, list, 24, TimeUnit.HOURS);
 
         return Result.success(list);
     }

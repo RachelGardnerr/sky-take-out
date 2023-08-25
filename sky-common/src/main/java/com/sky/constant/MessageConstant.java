@@ -8,8 +8,8 @@ public class MessageConstant {
     public static final String PASSWORD_ERROR = "密码错误";
     public static final String ACCOUNT_NOT_FOUND = "账号不存在";
 
-    public  static final String NOT_FOND = "不存在";
-    public  static final String ALREADY_EXITS = "已存在";
+    public static final String NOT_FOND = "不存在";
+    public static final String ALREADY_EXITS = "已存在";
     public static final String ACCOUNT_LOCKED = "账号被锁定";
     public static final String ACCOUNT_NOT_AUTH = "该用户不是管理用户";
     public static final String UNKNOWN_ERROR = "未知错误";
@@ -28,4 +28,6 @@ public class MessageConstant {
     public static final String ORDER_STATUS_ERROR = "订单状态错误";
     public static final String ORDER_NOT_FOUND = "订单不存在";
 
+    public static final String CANCELLED_UN_PAY = "未支付，用户自主取消";
+    public static final String DISH_ENABLE_FAILED = "订单中包含已下架菜品";
 }

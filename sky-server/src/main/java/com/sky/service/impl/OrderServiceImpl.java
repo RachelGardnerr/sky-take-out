@@ -18,6 +18,7 @@ import com.sky.service.OrderService;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ import java.util.List;
  * @DATE: 2023/8/21 17:12
  */
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -50,6 +52,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private DishMapper dishMapper;
+
+    @Autowired
+    private SetmealMapper setmealMapper;
 
 
     /**
@@ -203,5 +211,90 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return new PageResult(page.getTotal(), list);
+    }
+
+    /**
+     * 根据订单id查询订单详情
+     *
+     * @param orderId
+     * @return
+     */
+    @Override
+    public OrderVO getDetailById(Long orderId) {
+
+        // 根据id查询订单
+        Orders orders = ordersMapper.selectById(orderId);
+
+        // 查询该订单对应的菜品/套餐明细
+        List<OrderDetail> orderDetailList = ordersDetailMapper.selectByOrderId(orderId);
+
+        // 将该订单及其详情封装到OrderVO并返回
+        OrderVO orderVO = new OrderVO();
+        BeanUtils.copyProperties(orders, orderVO);
+        orderVO.setOrderDetailList(orderDetailList);
+        return orderVO;
+    }
+
+    /**
+     * 取消订单
+     * // TODO 未完成
+     *
+     * @param orderId
+     */
+    @Override
+    public void modify(Long orderId) {
+
+        Orders order = ordersMapper.selectById(orderId);
+        if (order == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NOT_FOUND);
+        }
+        // 已下单未支付、商家未接单，可直接取消
+        if (order.getPayStatus() == Orders.UN_PAID) {
+            order.setStatus(Orders.CANCELLED);
+            order.setCancelTime(LocalDateTime.now());
+            order.setCancelReason(MessageConstant.CANCELLED_UN_PAY);
+            ordersMapper.update(order);
+        }
+        // 已下单 已支付
+    }
+
+    /**
+     * 再来一单
+     *
+     * @param id 订单id
+     */
+    @Override
+    public void againOrder(Long id) {
+        List<OrderDetail> orderDetailList = ordersDetailMapper.selectByOrderId(id);
+        ShoppingCart shoppingCart = new ShoppingCart();
+
+        orderDetailList.forEach(orderDetail -> {
+            BeanUtils.copyProperties(orderDetail, shoppingCart, "id");
+            shoppingCart.setCreateTime(LocalDateTime.now());
+            shoppingCart.setUserId(BaseContext.getCurrentId());
+            shoppingCartMapper.insert(shoppingCart);
+        });
+        /**
+         // 查询当前用户id
+         Long userId = BaseContext.getCurrentId();
+
+         // 根据订单id查询当前订单详情
+         List<OrderDetail> orderDetailList = ordersDetailMapper.selectByOrderId(id);
+
+         // 将订单详情对象转换为购物车对象
+         List<ShoppingCart> shoppingCartList = orderDetailList.stream().map(orderDetail -> {
+         ShoppingCart shoppingCart = new ShoppingCart();
+
+         // 将原订单详情里面的菜品信息重新复制到购物车对象中
+         BeanUtils.copyProperties(orderDetail, shoppingCart, "id");
+         shoppingCart.setUserId(userId);
+         shoppingCart.setCreateTime(LocalDateTime.now());
+
+         return shoppingCart;
+         }).collect(Collectors.toList());
+
+         // 将购物车对象批量添加到数据库
+         shoppingCartMapper.insertBatch(shoppingCartList);
+         **/
     }
 }

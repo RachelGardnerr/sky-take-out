@@ -76,7 +76,7 @@ public class DishController {
     @ApiOperation("菜品批量删除")
     public Result removeBatch(@RequestParam List<Long> ids) {
         dishService.removeBatch(ids);
-        clearCache("keys_*");
+        clearCache("dish_*");
         return Result.success();
     }
 
@@ -92,7 +92,7 @@ public class DishController {
     public Result startOrStop(@PathVariable Integer status, Long id) {
         log.info("菜品状态：{}", status + " 菜品分类id:{}", id);
         dishService.startOrStop(status, id);
-        clearCache("keys_*");
+        clearCache("dish_*");
         return Result.success();
     }
 
@@ -133,7 +133,7 @@ public class DishController {
     public Result modify(@RequestBody DishDTO dishDTO) {
         log.info("修改菜品:{}", dishDTO);
         dishService.modify(dishDTO);
-        clearCache("keys_*");
+        clearCache("dish_*");
         return Result.success();
     }
 

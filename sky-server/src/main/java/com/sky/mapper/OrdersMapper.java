@@ -39,4 +39,7 @@ public interface OrdersMapper {
      */
 
     Page<Orders> selectByUserId(OrdersPageQueryDTO orderPageQueryDTO);
+
+    @Select("select * from orders where id = #{orderId}")
+    Orders selectById(Long orderId);
 }

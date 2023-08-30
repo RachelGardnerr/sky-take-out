@@ -1,5 +1,6 @@
 package com.sky.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -13,6 +14,7 @@ import com.sky.exception.ShoppingCartBusinessException;
 import com.sky.mapper.*;
 import com.sky.result.PageResult;
 import com.sky.service.OrderService;
+import com.sky.task.WebSocketServer;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
@@ -26,7 +28,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -41,18 +45,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private AddressBookMapper addressBookMapper;
-
     @Autowired
     private OrdersMapper orderMapper;
-
     @Autowired
     private ShoppingCartMapper shoppingCartMapper;
-
     @Autowired
     private OrdersDetailMapper ordersDetailMapper;
-
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
 
     /**
@@ -167,6 +169,12 @@ public class OrderServiceImpl implements OrderService {
                 .checkoutTime(LocalDateTime.now())
                 .build();
         orderMapper.update(orders);
+        // 来单提醒
+        Map map = new HashMap();
+        map.put("type", 1);//通知类型 1来单提醒 2客户催单
+        map.put("orderId", orders.getId());//订单id
+        map.put("content", "订单号:" + outTradeNo);
+        webSocketServer.sendToAllClient(JSON.toJSONString(map));
     }
 
 
@@ -461,7 +469,7 @@ public class OrderServiceImpl implements OrderService {
         Orders order = orderMapper.selectById(orderId);
         Integer status = order.getStatus();
         // 用户已支付
-        if (status == Orders.PAID){
+        if (status == Orders.PAID) {
             order.setPayStatus(Orders.REFUND);
             // 调用支付接口退款
             // ......

@@ -29,7 +29,7 @@ public class OrderTask {
      * 已取消订单定时任务
      */
     @Scheduled(cron = "0 * * * * ? ") // 每分钟自动执行
-    @Scheduled(cron = "0/5 * * * * ? ")
+//    @Scheduled(cron = "0/5 * * * * ? ")
     public void cancelledOrdersTask() {
         log.info("超时未支付订单自动取消:{}", LocalDateTime.now());
         LocalDateTime dateTime = LocalDateTime.now().plusMinutes(-15);

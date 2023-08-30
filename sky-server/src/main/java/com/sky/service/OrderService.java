@@ -2,7 +2,10 @@ package com.sky.service;
 
 import com.sky.dto.*;
 import com.sky.result.PageResult;
-import com.sky.vo.*;
+import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
+import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 
 public interface OrderService {
 
@@ -102,7 +105,16 @@ public interface OrderService {
 
     /**
      * 取消订单
+     *
      * @param ordersCancelDTO
      */
     void cancel(OrdersCancelDTO ordersCancelDTO);
+
+    /**
+     * 用户催单
+     *
+     * @param id
+     */
+    void reminder(Long id);
+
 }

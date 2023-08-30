@@ -108,6 +108,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("/statistics")
+    @ApiOperation("个状态订单数量统计")
     public Result<OrderStatisticsVO> statistics() {
         OrderStatisticsVO orderStatisticsVO = orderService.statistics();
         return Result.success(orderStatisticsVO);
@@ -119,9 +120,12 @@ public class OrderController {
      * @return
      */
     @PutMapping("/cancel")
+    @ApiOperation("取消订单")
     public Result cancel(@RequestBody OrdersCancelDTO ordersCancelDTO) {
-        log.info("取消订单:{}",ordersCancelDTO);
+        log.info("取消订单:{}", ordersCancelDTO);
         orderService.cancel(ordersCancelDTO);
         return Result.success();
     }
+
+
 }

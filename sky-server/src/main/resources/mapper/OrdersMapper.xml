@@ -56,4 +56,16 @@
         </where>
         order by order_time desc
     </select>
+    <select id="selectPage" resultType="com.sky.entity.Orders">
+        select * from orders s
+        <where>
+            <if test="number != null">s.number = #{number}</if>
+            <if test="phone != null">s.phone = #{phone}</if>
+            <if test="status != null">s.status = #{status}</if>
+            <if test="beginTime != null and endTime != null">
+                s.order_time between #{beginTime} and #{endTime}
+            </if>
+        </where>
+        order by s.order_time desc
+    </select>
 </mapper>

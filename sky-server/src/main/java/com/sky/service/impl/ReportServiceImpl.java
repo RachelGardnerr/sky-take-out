@@ -6,14 +6,18 @@ import com.sky.mapper.OrdersMapper;
 import com.sky.mapper.ReportMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
-import com.sky.vo.OrderReportVO;
-import com.sky.vo.SalesTop10ReportVO;
-import com.sky.vo.TurnoverReportVO;
-import com.sky.vo.UserReportVO;
+import com.sky.service.WorkspaceService;
+import com.sky.vo.*;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -38,6 +42,8 @@ public class ReportServiceImpl implements ReportService {
     private UserMapper userMapper;
     @Autowired
     private OrdersMapper ordersMapper;
+    @Autowired
+    private WorkspaceService workspaceService;
 
 
     /**
@@ -196,5 +202,62 @@ public class ReportServiceImpl implements ReportService {
         return dateList;
     }
 
+    /**
+     * 导出运营数据
+     */
+    @Override
+    public void exportBusinessData(HttpServletResponse response) {
+        LocalDate dateBegin = LocalDate.now().minusDays(30);
+        LocalDate dateEnd = LocalDate.now().minusDays(1);
 
+        // 获取运营概览数据
+        BusinessDataVO businessData = workspaceService.getBusinessData(LocalDateTime.of(dateBegin, LocalTime.MIN), LocalDateTime.of(dateEnd, LocalTime.MAX));
+
+        // 获取excel对象
+        InputStream isStream = this.getClass().getClassLoader().getResourceAsStream("template/运营数据报表模板.xlsx");
+        try {
+            XSSFWorkbook excel = new XSSFWorkbook(isStream);
+            // 获取第一个sheet页
+            XSSFSheet sheet = excel.getSheetAt(0);
+            // 填充概览数据
+            // 填充第二行第二列时间范围数据
+            sheet.getRow(1).getCell(1).setCellValue("时间：" + dateBegin + "至" + dateEnd);
+            // 填充第四行第三列营业额数据
+            XSSFRow row = sheet.getRow(3);
+            row.getCell(2).setCellValue(businessData.getTurnover());
+            // 填充第四行第五列订单完成率数据
+            row.getCell(4).setCellValue(businessData.getOrderCompletionRate());
+            // 填充第四行第七列新增用户数数据
+            row.getCell(6).setCellValue(businessData.getNewUsers());
+            // 填充第五行第三列新增用户数数据
+            row = sheet.getRow(4);
+            row.getCell(2).setCellValue(businessData.getNewUsers());
+            // 填充第五行第五列新增用户数数据
+            row.getCell(4).setCellValue(businessData.getNewUsers());
+            // 填充明细数据
+            for (int i = 0; i < 30; i++) {
+                LocalDate date = dateBegin.plusDays(i);
+                BusinessDataVO data = workspaceService.getBusinessData((LocalDateTime.of(date, LocalTime.MIN)), LocalDateTime.of(date, LocalTime.MAX));
+                row = sheet.getRow(7 + i);
+                row.getCell(1).setCellValue(date.toString());
+                row.getCell(2).setCellValue(data.getTurnover());// 营业额
+                row.getCell(3).setCellValue(data.getValidOrderCount());// 有效订单
+                row.getCell(4).setCellValue(data.getOrderCompletionRate());// 订单完 成率
+                row.getCell(5).setCellValue(data.getUnitPrice());// 平局客单价
+                row.getCell(6).setCellValue(data.getNewUsers());// 新增用户数
+            }
+            OutputStream outputStream = response.getOutputStream();
+            excel.write(outputStream);
+
+            outputStream.flush();
+            outputStream.close();
+            excel.close();
+            isStream.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
 }
